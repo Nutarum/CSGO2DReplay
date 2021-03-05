@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="wasm/wasm_exec.js"></script>
+		<script src="js/main.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+  
+	</head>
+	<body>
+		<input type="file" id="demofile" name="file" enctype="multipart/form-data"/>
+		<button id="btnParse" onclick="parseFile()">Parse</button>
+					
+		<button id="btnParse2" onclick="parseTick()">parseTick</button>
+		<button id="btnParse3" onclick="getTick()">getTick</button>
+		
+		<button id="btnParse4" onclick="getPlayerInfo()">getPlayerInfo</button>
+		
+		<button id="btnParse5" onclick="parse1000()">parse1000</button>
+		
+		<button id="btnParse6" onclick="play()">play</button>
+		
+		<br>
+		<p>State: <span id="state"></span></p>
+		
+		<canvas id="canvas" width="800" height="800" ></canvas>
+		
+	</body>
+</html>
