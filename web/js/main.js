@@ -62,16 +62,27 @@ function draw(playersJson){
 	var players = JSON.parse(playersJson);
 	players.forEach(player => {		
 	
+		if(player["team"]==2){
+			ctx.strokeStyle = "#666600";
+		}else{
+			ctx.strokeStyle = "#006666";
+		}
 		
-		ctx.strokeStyle = "#006600";
 		ctx.beginPath();
 		
 		var newX = player["x"] / 6.208 + 336
 		var newY = 800-(player["y"] / 6.208 + 180)
-		
-		ctx.arc(newX, newY, 5, 0, 2 * Math.PI);
-		ctx.stroke();		
-		
+		if(player["health"]>0){
+			ctx.arc(newX, newY, 5, 0, 2 * Math.PI);
+		}else{
+			ctx.moveTo(newX-4, newY-4);
+			ctx.lineTo(newX+4, newY+4);
+			ctx.stroke();
+			ctx.moveTo(newX-4, newY+4);
+			ctx.lineTo(newX+4, newY-4);
+			ctx.stroke();
+		}		
+		ctx.stroke();				
 		
 	});
 }
@@ -81,9 +92,16 @@ function processNextTick(){
 		getPlayerInfo();
 	});
 }
-
-function play(){	
-	var t=setInterval(processNextTick,10);		
+var playInterval;
+function play(){
+	if(!playInterval){
+		playInterval=setInterval(processNextTick,15.625);	
+	}
+		
+}
+function stop(){
+	clearInterval(playInterval);
+	playInterval = null;
 }
 
 function getPlayerInfo() {

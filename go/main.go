@@ -143,7 +143,7 @@ func statsFor(p *common.Player) playerStats {
 type playerInfo struct {
 	Name    string `json:"name"`
 	Team    int    `json:"team"`
-	Health  int    `json:"Health"`
+	Health  int    `json:"health"`
 	X  		int    `json:"x"`
 	Y  		int    `json:"y"`
 }

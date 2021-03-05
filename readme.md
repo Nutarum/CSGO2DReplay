@@ -11,7 +11,7 @@ If you are using other version of GO, you might need to replace the file "web/wa
 2. Generate the WASM file:  
 You need to generate a new WASM file each time you modify the ".go" files (you can skip this if you dont modify the .go files).  
 To do this, inside the "go" folder in this project, run this command from cmd:   
-`GOOS=js GOARCH=wasm go build -o ../web/demoinfocs.wasm main.go`
+`GOOS=js GOARCH=wasm go build -o ../web/wasm/demoinfocs.wasm main.go`
 3. Serve the "web" folder in a web server (Xampp for example)
 4. Open the web app from your browser -> [index.html](http://localhost/CSGO2DReplay/web/index.html)
 
