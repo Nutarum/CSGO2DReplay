@@ -146,6 +146,7 @@ type playerInfo struct {
 	Health  int    `json:"health"`
 	X  		int    `json:"x"`
 	Y  		int    `json:"y"`
+	Dir		int    `json:"dir"`
 }
 
 func infoFor(p *common.Player) playerInfo {
@@ -155,6 +156,7 @@ func infoFor(p *common.Player) playerInfo {
 		Health: p.Health(),
 		X: 		int(p.LastAlivePosition.X),
 		Y: 		int(p.LastAlivePosition.Y),
+		Dir: 	int(p.ViewDirectionX()),
 	}
 }
 
