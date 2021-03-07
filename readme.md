@@ -18,3 +18,13 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 ### Other info
 - Map files from [csgo-overviews](https://github.com/zoidbergwill/csgo-overviews)
 - Example of how to use [demoinfocs-golang](https://github.com/markus-wa/demoinfocs-golang) from javascript at [demoinfocs-wasm](https://github.com/markus-wa/demoinfocs-wasm)
+
+### ToDo
+Active smokes
+Flashed players
+Bomb (in a player, ground, or planted)
+Round timers
+Fix position conversion to be exact
+Time control, round control (and try to make faster the skip to certain point)
+Positions for other maps (Mirage, Dust, Overpass, Vertigo, Nuke, Train, Cache)
+Players HUD (player hp, active weapon, money...)

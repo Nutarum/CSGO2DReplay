@@ -34,7 +34,6 @@ func main() {
 }
 
 func registerCallbacks() {
-	js.Global().Set("parse", js.FuncOf(parse))
 	js.Global().Set("parseinit", js.FuncOf(parseinit))
 	
 	js.Global().Set("parsetick", js.FuncOf(parsetick))	
@@ -59,13 +58,22 @@ func parseinitInternal(data js.Value, callback js.Value) {
 	
 	registerEvents()
 
-	// Return result to JS
-	callback.Invoke(header.MapName)
+	var returnValue []interface{}
+	
+	returnValue = append(returnValue,header.MapName)
+	returnValue = append(returnValue,parser.TickRate())
+	
+	bInfo, err := json.Marshal(returnValue)
+	checkError(err)
+	callback.Invoke(string(bInfo))
 }
 
 func registerEvents(){	
 	parser.RegisterEventHandler(func(e events.WeaponFire){
 		js.Global().Call("fireEvent", []interface{}{e.Shooter.LastAlivePosition.X, e.Shooter.LastAlivePosition.Y, e.Shooter.ViewDirectionX()})
+	});		
+	parser.RegisterEventHandler(func(events.RoundStart){
+		js.Global().Call("roundStart")
 	});	
 }
 
@@ -76,7 +84,7 @@ func parsetick(this js.Value, args []js.Value) interface{} {
 }
 
 func gettick(this js.Value, args []js.Value) interface{} {
-	fmt.Println(parser.CurrentFrame())
+	args[0].Invoke(parser.GameState().IngameTick())
 	return nil
 }
 
@@ -91,7 +99,7 @@ func getgameinfo(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
-func getgameinfoInternal(callback js.Value) {	
+func getgameinfoInternal(callback js.Value) {
 	
 	var returnValue []interface{}
 	
@@ -105,47 +113,32 @@ func getgameinfoInternal(callback js.Value) {
 	nades := parser.GameState().GrenadeProjectiles()
 	var infoN []nadeInfo
 	for _, nade := range nades {
+		//fmt.Println(nade)
 		infoN = append(infoN, infoForNade(nade))
 	}
 	
 	returnValue = append(returnValue,infoN)
 	
+	infernos := parser.GameState().Infernos()
+	var infoI []interface{}
+	for _, inferno := range infernos {		
+		infoI = append(infoI, inferno.Fires().ConvexHull2D())
+	}	
+	
+	returnValue = append(returnValue,infoI)
+	
+	var scoreInfo []interface{}
+	scoreInfo = append(scoreInfo,parser.GameState().TotalRoundsPlayed())
+	scoreInfo = append(scoreInfo,parser.GameState().Team(2).ClanName())
+	scoreInfo = append(scoreInfo,parser.GameState().Team(2).Score())
+	scoreInfo = append(scoreInfo,parser.GameState().Team(3).ClanName())
+	scoreInfo = append(scoreInfo,parser.GameState().Team(3).Score())
+	
+	returnValue = append(returnValue,scoreInfo)
+	
 	bInfo, err := json.Marshal(returnValue)
 	checkError(err)
 	callback.Invoke(string(bInfo))	
-}
-
-func parse(this js.Value, args []js.Value) interface{} {
-	parseInternal(args[0], args[1])
-	return nil
-}
-
-func parseInternal(data js.Value, callback js.Value) {
-	b := bytes.NewBuffer(uint8ArrayToBytes(data))
-	parser := dem.NewParser(b)
-
-	header, err := parser.ParseHeader()
-	checkError(err)
-	// TODO: report headerpointer error
-	//fmt.Println("Header:", header)
-	fmt.Println("map: " + header.MapName)
-
-	err = parser.ParseToEnd()
-	checkError(err)
-
-	fmt.Println("parsed")
-
-	players := parser.GameState().Participants().Playing()
-	var stats []playerStats
-	for _, p := range players {
-		stats = append(stats, statsFor(p))
-	}
-
-	bStats, err := json.Marshal(stats)
-	checkError(err)
-
-	// Return result to JS
-	callback.Invoke(string(bStats))
 }
 
 type playerStats struct {
@@ -165,22 +158,26 @@ func statsFor(p *common.Player) playerStats {
 }
 
 type playerInfo struct {
-	Name    string `json:"name"`
-	Team    int    `json:"team"`
-	Health  int    `json:"health"`
-	X  		int    `json:"x"`
-	Y  		int    `json:"y"`
-	Dir		int    `json:"dir"`
+	Name    		string `json:"name"`
+	Team    		int    `json:"team"`
+	Health  		int    `json:"health"`
+	X  				int    `json:"x"`
+	Y  				int    `json:"y"`
+	Dir				int    `json:"dir"`
+	Reloading		bool   `json:"rel"`
+	InteractingBomb bool   `json:"bombInt"`
 }
 
 func infoForPlayer(p *common.Player) playerInfo {
 	return playerInfo{
-		Name:	p.Name,
-		Team:   int(p.Team),
-		Health: p.Health(),
-		X: 		int(p.LastAlivePosition.X),
-		Y: 		int(p.LastAlivePosition.Y),
-		Dir: 	int(p.ViewDirectionX()),
+		Name:				p.Name,
+		Team:  				int(p.Team),
+		Health:				p.Health(),
+		X: 					int(p.LastAlivePosition.X),
+		Y: 					int(p.LastAlivePosition.Y),
+		Dir: 				int(p.ViewDirectionX()),
+		Reloading: 			p.IsReloading,
+		InteractingBomb: 	p.IsDefusing || p.IsPlanting,
 	}
 }
 
