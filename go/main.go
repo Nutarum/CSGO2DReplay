@@ -40,7 +40,7 @@ func registerCallbacks() {
 	js.Global().Set("parsetick", js.FuncOf(parsetick))	
 	js.Global().Set("gettick", js.FuncOf(gettick))	
 	
-	js.Global().Set("getplayerinfo", js.FuncOf(getplayerinfo))	
+	js.Global().Set("getgameinfo", js.FuncOf(getgameinfo))	
 }
 
 
@@ -66,7 +66,7 @@ func parseinitInternal(data js.Value, callback js.Value) {
 func registerEvents(){	
 	parser.RegisterEventHandler(func(e events.WeaponFire){
 		js.Global().Call("fireEvent", []interface{}{e.Shooter.LastAlivePosition.X, e.Shooter.LastAlivePosition.Y, e.Shooter.ViewDirectionX()})
-	});
+	});	
 }
 
 func parsetick(this js.Value, args []js.Value) interface{} {
@@ -86,18 +86,31 @@ func uint8ArrayToBytes(value js.Value) []byte {
 	return s
 }
 
-func getplayerinfo(this js.Value, args []js.Value) interface{} {
-	getplayerinfoInternal(args[0])
+func getgameinfo(this js.Value, args []js.Value) interface{} {
+	getgameinfoInternal(args[0])
 	return nil
 }
-func getplayerinfoInternal(callback js.Value) {
 
+func getgameinfoInternal(callback js.Value) {	
+	
+	var returnValue []interface{}
+	
 	players := parser.GameState().Participants().Playing()
-	var info []playerInfo
+	var infoP []playerInfo
 	for _, player := range players {
-		info = append(info, infoFor(player))
+		infoP = append(infoP, infoForPlayer(player))
 	}
-	bInfo, err := json.Marshal(info)
+	
+	returnValue = append(returnValue,infoP)
+	nades := parser.GameState().GrenadeProjectiles()
+	var infoN []nadeInfo
+	for _, nade := range nades {
+		infoN = append(infoN, infoForNade(nade))
+	}
+	
+	returnValue = append(returnValue,infoN)
+	
+	bInfo, err := json.Marshal(returnValue)
 	checkError(err)
 	callback.Invoke(string(bInfo))	
 }
@@ -160,7 +173,7 @@ type playerInfo struct {
 	Dir		int    `json:"dir"`
 }
 
-func infoFor(p *common.Player) playerInfo {
+func infoForPlayer(p *common.Player) playerInfo {
 	return playerInfo{
 		Name:	p.Name,
 		Team:   int(p.Team),
@@ -168,6 +181,20 @@ func infoFor(p *common.Player) playerInfo {
 		X: 		int(p.LastAlivePosition.X),
 		Y: 		int(p.LastAlivePosition.Y),
 		Dir: 	int(p.ViewDirectionX()),
+	}
+}
+
+type nadeInfo struct {
+	X    int `json:"x"`
+	Y    int `json:"y"`
+	Type int `json:"type"`
+}
+
+func infoForNade(n *common.GrenadeProjectile) nadeInfo {
+	return nadeInfo{
+		X:		int(n.Position().X),
+		Y:  	int(n.Position().Y),
+		Type:  	int(n.WeaponInstance.Type),
 	}
 }
 

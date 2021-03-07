@@ -76,12 +76,33 @@ function getTick() {
 	gettick((t) =>console.log(t));
 }
 
-function draw(playersJson){
+function draw(gameJson){
 	ctx.clearRect(0,0,800,800);
 	ctx.drawImage(background,0,0,800,800);   	
+		
+	var game = JSON.parse(gameJson);
 	
-	var players = JSON.parse(playersJson);
-	players.forEach(player => {		
+	if(game[1]){
+		game[1].forEach(nade => {		
+			var [posX,posY] = transformPositionInferno(nade["x"],nade["y"]);					
+			if(nade["type"]==501){ //decoy
+				ctx.fillStyle = "#f81898";
+			}else if(nade["type"]==502 || nade["type"]==503){ //molo
+				ctx.fillStyle = "#ff0000";
+			}else if(nade["type"]==504){ //flash
+				ctx.fillStyle = "#ffffff";
+			}else if(nade["type"]==505){ //smoke
+				ctx.fillStyle = "#8888ff";
+			}else if(nade["type"]==506){ //he
+				ctx.fillStyle = "#ffa500";
+			}				
+			ctx.beginPath();
+			ctx.rect(posX, posY, 5, 10);
+			ctx.fill();
+		});
+	}
+	
+	game[0].forEach(player => {		
 	
 		if(player["team"]==2){
 			var teamColor = "#ffdd00"
@@ -152,7 +173,7 @@ function draw(playersJson){
 		}					
 		
 	});
-	
+		
 	shots.forEach(shot => {
 		ctx.beginPath();
 		ctx.strokeStyle="#dddddd";		
@@ -166,8 +187,11 @@ function draw(playersJson){
 function processNextTick(){
 	removeShots();
 	
-	parsetick((e) =>{		
-		getPlayerInfo();
+	parsetick((e) =>{			
+		getgameinfo((game) =>{
+			draw(game)			
+		});
+	
 	});
 }
 var playInterval;
@@ -180,12 +204,6 @@ function play(){
 function stop(){
 	clearInterval(playInterval);
 	playInterval = null;
-}
-
-function getPlayerInfo() {
-	getplayerinfo((players) =>{
-		draw(players)		
-	});
 }
 
 function state(state) {
