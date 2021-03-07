@@ -9,6 +9,7 @@ import (
 
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	common "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
+	events "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
 const (
@@ -42,8 +43,10 @@ func registerCallbacks() {
 	js.Global().Set("getplayerinfo", js.FuncOf(getplayerinfo))	
 }
 
+
+
 func parseinit(this js.Value, args []js.Value) interface{} {
-	parseinitInternal(args[0], args[1])
+	parseinitInternal(args[0], args[1])	
 	return nil
 }
 
@@ -53,9 +56,17 @@ func parseinitInternal(data js.Value, callback js.Value) {
 
 	header, err := parser.ParseHeader()
 	checkError(err)
+	
+	registerEvents()
 
 	// Return result to JS
 	callback.Invoke(header.MapName)
+}
+
+func registerEvents(){	
+	parser.RegisterEventHandler(func(e events.WeaponFire){
+		js.Global().Call("fireEvent", []interface{}{e.Shooter.LastAlivePosition.X, e.Shooter.LastAlivePosition.Y, e.Shooter.ViewDirectionX()})
+	});
 }
 
 func parsetick(this js.Value, args []js.Value) interface{} {
