@@ -1,5 +1,7 @@
 var ctx;
 var background = new Image();
+
+var mapSize = 800;
 window.onload = function() {
     var myCanvas = document.getElementById('canvas');
     ctx = myCanvas.getContext('2d');
@@ -7,7 +9,7 @@ window.onload = function() {
 	background.src = "./resources/de_inferno.png";
 	// Make sure the image is loaded first otherwise nothing will draw.
 	background.onload = function(){
-		ctx.drawImage(background,0,0,800,800);   
+		ctx.drawImage(background,0,0,mapSize,mapSize);   
 	}
 	
 };
@@ -53,8 +55,16 @@ function parseFile() {
 	reader.readAsArrayBuffer(document.getElementById('demofile').files[0])
 }
 
+function testpos(x,y){
+	[nx,ny] = transformPositionInferno(x,y);
+	ctx.beginPath();
+	ctx.fillStyle = "#ff0000";
+	ctx.arc(nx, ny, 2, 0, 2 * Math.PI);
+	ctx.fill();
+}
+
 function transformPositionInferno(x,y){
-	return [x/6.208 + 332, 800 - (y/6.208+176)];
+	return [x/6.208 + 332, mapSize - (y/6.208+179)];
 }
 
 function removeShots(){
@@ -67,20 +77,17 @@ function removeShots(){
 }
 
 var lastRoundStart = 0;
-var roundCurrentTime = 0;
 function roundStart(){
 	gettick((t)=>{lastRoundStart=t});
-	roundCurrentTime = new Date().getTime();
+	
+	if(roundStarts.length == 0 || roundStarts[roundStarts.length-1]<lastRoundStart){
+		roundStarts.push(lastRoundStart);
+	}
 	if(nextround){
 		nextround = false;
 	}	
 }
 
-var nextround = false;
-function nextRound(){
-	nextround = true;
-	play();
-}	
 
 function comparaNombres(a, b) {
   if (a["name"]<b["name"]) {
@@ -90,8 +97,8 @@ function comparaNombres(a, b) {
 }
 
 function draw(gameJson){
-	ctx.clearRect(0,0,800,800);
-	ctx.drawImage(background,0,0,800,800);   	
+	ctx.clearRect(0,0,mapSize,mapSize);
+	ctx.drawImage(background,0,0,mapSize,mapSize);   	
 		
 	var game = JSON.parse(gameJson);
 	
@@ -110,7 +117,7 @@ function draw(gameJson){
 				ctx.fillStyle = "#ffa500";
 			}				
 			ctx.beginPath();
-			ctx.rect(posX, posY, 5, 10);
+			ctx.rect(posX-2, posY-4, 4, 8);
 			ctx.fill();
 		});
 	}
@@ -127,7 +134,7 @@ function draw(gameJson){
 		var [posX,posY] = transformPositionInferno(player["x"],player["y"]);
 		
 		//var posX = player["x"] / 6.208 + 332
-		//var posY = 800-(player["y"] / 6.208 + 176)
+		//var posY = mapSize-(player["y"] / 6.208 + 176)
 		
 		//if the player is alive
 		if(player["health"]>0){	
@@ -159,8 +166,8 @@ function draw(gameJson){
 			var rads = player["dir"] * (Math.PI/180);			
 			var triangleX = posX + 8 * Math.cos(rads);
 			var triangleY = posY - 8 * Math.sin(rads);			
-			ctx.beginPath();			
-			ctx.fillStyle = teamColor;
+			ctx.beginPath();	
+			ctx.fillStyle=teamColor;			
 			ctx.moveTo(triangleX + 4 * Math.cos(rads+2*Math.PI/3) ,triangleY - 4 * Math.sin(rads+2*Math.PI/3));
 			ctx.lineTo(triangleX + 3 * Math.cos(rads),triangleY - 3 * Math.sin(rads));
 			ctx.lineTo(triangleX + 4 * Math.cos(rads+4*Math.PI/3) ,triangleY - 4 * Math.sin(rads+4*Math.PI/3));
@@ -223,6 +230,24 @@ function draw(gameJson){
 			ctx.globalAlpha = 1;			
 		});
 	}
+	
+	//the bomb
+	if(game[4]){
+		var bombX,bombY;
+		if(game[4][2]){
+			[bombX,bombY] = transformPositionInferno(game[4][2],game[4][3]);	
+			bombX+=8;
+			bombY+=8;
+		}else{
+			[bombX,bombY] = transformPositionInferno(game[4][0],game[4][1]);			
+		}			
+		ctx.beginPath();
+		ctx.fillStyle = "#ff0000";	
+		ctx.rect(bombX-3, bombY-3, 6, 6);
+		ctx.fill();	
+	}
+	
+	
 		
 	shots.forEach(shot => {
 		ctx.beginPath();
@@ -267,31 +292,63 @@ function draw(gameJson){
 		
 }
 
-function skip5(){
+var roundStarts = [];
+var nextround = false;
+
+function previousRound(){
 	var thisTick;
 	gettick((t)=>{thisTick = t});
-	targetTick = thisTick + 5000/tickInterval;
+	
+	for(var i=0;i<roundStarts.length;i++){
+		if(roundStarts[i] < thisTick - 300){ //el 300 es para que los 5 primeros segundos de ronda (serian 2.5 segundos en 124 tick), nos lleven a la ronda anterior
+			targetTick = roundStarts[i];
+		}
+	}
+	
+	parseFile();	
+}	
+
+function nextRound(){
+	nextround = true;
+	play();
+}	
+
+
+function skip10(){
+	var thisTick;
+	gettick((t)=>{thisTick = t});
+	targetTick = thisTick + 10000/tickInterval;
 }
 
-function back5(){
+function back10(){
 	var thisTick;
 	gettick((t)=>{thisTick = t});
-	targetTick = thisTick - 5000/tickInterval;
+	targetTick = thisTick - 10000/tickInterval;
 	
 	parseFile();		
+}
+
+function x2(){
+		speedModifier=2;
+}
+function x4(){
+		speedModifier=4;
+}
+function x0dot5(){
+		speedModifier=0.5;
 }
 
 targetTick = 0;
 function processNextTick(){	
 	while(nextround){
 		removeShots();
-		parsetick((e) =>{});
+		parsetick();
 	}
 	
 	var thisTick;
 	gettick((t)=>{thisTick = t});
 	while(thisTick<targetTick){	
-		parsetick((e) =>{});
+		parsetick();
 		gettick((t)=>{thisTick = t});
 		nextTick = new Date().getTime()+tickInterval * speedModifier;
 		removeShots();
@@ -303,7 +360,7 @@ function processNextTick(){
 		var oldTick 		
 		gettick((t)=>{oldTick = t});
 		
-		parsetick((e) =>{});
+		parsetick();
 		
 		gettick((t)=>{newTick = t});
 		
@@ -321,6 +378,7 @@ function processNextTick(){
 
 var playInterval;
 function play(){	
+	speedModifier = 1;
 	if(!playInterval){
 		nextTick = new Date().getTime()+tickInterval * speedModifier;
 		playInterval=setInterval(processNextTick,2);	

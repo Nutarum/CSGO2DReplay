@@ -72,14 +72,13 @@ func registerEvents(){
 	parser.RegisterEventHandler(func(e events.WeaponFire){
 		js.Global().Call("fireEvent", []interface{}{e.Shooter.LastAlivePosition.X, e.Shooter.LastAlivePosition.Y, e.Shooter.ViewDirectionX()})
 	});		
-	parser.RegisterEventHandler(func(events.RoundStart){
+	parser.RegisterEventHandler(func(events.RoundStart){		
 		js.Global().Call("roundStart")
 	});	
 }
 
 func parsetick(this js.Value, args []js.Value) interface{} {
 	parser.ParseNextFrame()
-	args[0].Invoke("ok")
 	return nil
 }
 
@@ -135,6 +134,16 @@ func getgameinfoInternal(callback js.Value) {
 	scoreInfo = append(scoreInfo,parser.GameState().Team(3).Score())
 	
 	returnValue = append(returnValue,scoreInfo)
+	
+	var bombInfo []interface{}
+	bombInfo = append(bombInfo,parser.GameState().Bomb().LastOnGroundPosition.X)
+	bombInfo = append(bombInfo,parser.GameState().Bomb().LastOnGroundPosition.Y)
+	if(parser.GameState().Bomb().Carrier!=nil){
+		bombInfo = append(bombInfo,parser.GameState().Bomb().Carrier.Position().X)
+		bombInfo = append(bombInfo,parser.GameState().Bomb().Carrier.Position().Y)
+	}	
+	
+	returnValue = append(returnValue,bombInfo)
 	
 	bInfo, err := json.Marshal(returnValue)
 	checkError(err)

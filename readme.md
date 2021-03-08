@@ -22,9 +22,9 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 ### ToDo
 Active smokes
 Flashed players
-Bomb (in a player, ground, or planted)
 Round timers
-Fix position conversion to be exact
-Time control, round control (and try to make faster the skip to certain point)
 Positions for other maps (Mirage, Dust, Overpass, Vertigo, Nuke, Train, Cache)
+Try to make returning to a previous tick faster
 Players HUD (player hp, active weapon, money...)
+Bomb, diferent when planted
+Better indicators for bomb, reload and planting
