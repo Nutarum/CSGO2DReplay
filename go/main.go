@@ -74,6 +74,15 @@ func registerEvents(){
 	});		
 	parser.RegisterEventHandler(func(events.RoundStart){		
 		js.Global().Call("roundStart")
+	});		
+	parser.RegisterEventHandler(func(e events.SmokeStart){
+		js.Global().Call("smokeStart", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
+	});	
+	parser.RegisterEventHandler(func(e events.HeExplode){
+		js.Global().Call("heExplode", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
+	});	
+	parser.RegisterEventHandler(func(e events.FlashExplode){
+		js.Global().Call("flashExplode", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
 	});	
 }
 
@@ -175,6 +184,7 @@ type playerInfo struct {
 	Dir				int    `json:"dir"`
 	Reloading		bool   `json:"rel"`
 	InteractingBomb bool   `json:"bombInt"`
+	Flashed			int    `json:"flash"`
 }
 
 func infoForPlayer(p *common.Player) playerInfo {
@@ -187,6 +197,7 @@ func infoForPlayer(p *common.Player) playerInfo {
 		Dir: 				int(p.ViewDirectionX()),
 		Reloading: 			p.IsReloading,
 		InteractingBomb: 	p.IsDefusing || p.IsPlanting,
+		Flashed:			int(p.FlashDurationTimeRemaining().Milliseconds()),
 	}
 }
 
@@ -194,6 +205,7 @@ type nadeInfo struct {
 	X    int `json:"x"`
 	Y    int `json:"y"`
 	Type int `json:"type"`
+	Id 	int  `json:"id"`
 }
 
 func infoForNade(n *common.GrenadeProjectile) nadeInfo {
@@ -201,6 +213,7 @@ func infoForNade(n *common.GrenadeProjectile) nadeInfo {
 		X:		int(n.Position().X),
 		Y:  	int(n.Position().Y),
 		Type:  	int(n.WeaponInstance.Type),
+		Id:  	n.Entity.ID(),
 	}
 }
 

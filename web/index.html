@@ -3,35 +3,35 @@
 	<head>
 		<meta charset="utf-8">
 		<script src="wasm/wasm_exec.js"></script>
+		
 		<script src="js/main.js"></script>
-		<link rel="stylesheet" type="text/css" href="css/style.css">
-  
+		<script src="js/demoTime.js"></script>
+		<script src="js/utils.js"></script>
+		<script src="js/parse.js"></script>
+		<script src="js/draw.js"></script>
+		<script src="js/gameObjects.js"></script>
+		<script src="js/events.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="css/style.css">  
 	</head>
+		
 	<body>
-		<input type="file" id="demofile" name="file" enctype="multipart/form-data"/>
-		<button id="btnParse" onclick="parseFile()">Parse</button>
-		
-		<button id="btnParse2" onclick="test()">test</button>
-		<br>
-		<br>
-		<button id="btnParse22" onclick="previousRound()">previousRound</button>
-		<button id="btnParse2" onclick="nextRound()">nextRound</button>
-			<button id="btnParse3" onclick="play()">play</button>
-		
-		<button id="btnParse4" onclick="stop()">stop</button>
-		
-		<button id="btnParse5" onclick="back10()">back10</button>
-		<button id="btnParse6" onclick="skip10()">skip10</button>
-	
-		<button id="btnParse8" onclick="x0dot5()">x0.5</button>
-		<button id="btnParse7" onclick="x2()">x2</button>
-		<button id="btnParse8" onclick="x4()">x4</button>
-				
-		<br>
-		<p>State: <span id="state"></span></p>
-		
-		<canvas id="canvas" width="800" height="800" ></canvas>
-	
-		
+		<input type="file" disabled id="demofile" name="file" onchange="parseFile()" enctype="multipart/form-data"/>	
+		<div align="center">
+			<canvas id="canvas"></canvas>
+			<br>			
+			<button disabled id="btn2" class="btnControl" onclick="nextRound()">nextRound</button>
+			<button disabled id="btn3" class="btnControl" onclick="play()">play</button>			
+			<button disabled id="btn4" class="btnControl" onclick="stop()">stop</button>			
+			<button disabled id="btn5" class="btnControl" onclick="back10()">back10</button>
+			<button disabled id="btn6" class="btnControl" onclick="skip10()">skip10</button>		
+			<button disabled id="btn7" class="btnControl" onclick="x0dot5()">x0.5</button>
+			<button disabled id="btn8" class="btnControl" onclick="x2()">x2</button>
+			<button disabled id="btn9" class="btnControl" onclick="x4()">x4</button>
+			
+			<br><br>
+			<span id="roundBtns">Round:  </span>
+			
+		</div>	
 	</body>
 </html>
