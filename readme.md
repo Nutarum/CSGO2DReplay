@@ -20,7 +20,6 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 - Example of how to use [demoinfocs-golang](https://github.com/markus-wa/demoinfocs-golang) from javascript at [demoinfocs-wasm](https://github.com/markus-wa/demoinfocs-wasm)
 
 ### ToDo
-Round timers
 Positions for other maps (Mirage, Dust, Overpass, Vertigo, Nuke, Train, Cache)  
 Try to make returning to a previous tick faster  
 Players HUD (player hp, active weapon, money...)

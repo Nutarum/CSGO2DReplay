@@ -240,6 +240,7 @@ function draw(gameJson){
 	});
 	
 
+	//score
 	ctx.font = "14px Arial";
 	ctx.fillStyle = "#ffdd00"
 	ctx.textAlign = "right";
@@ -258,17 +259,44 @@ function draw(gameJson){
 	ctx.fillText(game[3][4] + " - " + teamName, 405, 20);
 	
 	ctx.fillStyle = "#ffffff"
-	ctx.textAlign = "center";
-	ctx.fillText("round " + (parseInt(game[3][0])+1), 400, 40);
+	ctx.textAlign = "right";
+	ctx.fillText("round " + (parseInt(game[3][0])+1), 395, 40);
 
-	
+	//timers	
 	var tick;
 	gettick((t)=>{tick = t});
+	
+	ctx.font = "14px Arial";
+	var seconds = 0;
+	var mins = 0;
+	if(freezeEndTime==0){
+		ctx.fillStyle = "#aaaaff";
+		seconds =  parseInt((freezeTime - ((tick - lastRoundStart) * tickInterval))/1000);		
+	}else{
+		if(bombPlantedTime==0){
+			ctx.fillStyle = "#cccccc";
+			seconds =  parseInt((roundTime - ((tick - freezeEndTime) * tickInterval))/1000);	
+		}else{
+			ctx.fillStyle = "#ffaaaa";
+			seconds =  parseInt((42000 - ((tick - bombPlantedTime) * tickInterval))/1000);	
+		}			
+	}
+	
+	mins = parseInt(seconds/60);	
+	seconds = seconds%60;
+	if(seconds<10 && seconds >=0){
+		seconds="0"+seconds
+	}
+	
+	ctx.textAlign = "left";
+	ctx.fillText(mins + ":" + seconds, 405, 40);
+	
+	
 	var txtTime =  ((tick - lastRoundStart) * tickInterval) / 1000;
 	
 	ctx.font = "14px Arial";
 	ctx.fillStyle = "#bbbbbb";
 	ctx.textAlign = "left";
-	ctx.fillText(txtTime, 375, 60);
+	ctx.fillText(txtTime, 10, 20);
 		
 }

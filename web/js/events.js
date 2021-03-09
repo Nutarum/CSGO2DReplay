@@ -1,3 +1,5 @@
+roundTimeLoaded = false
+
 function roundStart(){
 	gettick((t)=>{lastRoundStart=t});
 	
@@ -15,6 +17,28 @@ function roundStart(){
 	}	
 	
 	deleteAllObjects();
+	
+	if(!roundTimeLoaded){
+		getroundtime((t)=>{			
+			roundTime=60*t*1000;
+		});		
+		getfreezetime((t)=>{
+			freezeTime=t*1000;
+		});
+	}
+	
+	freezeEndTime = 0;
+	bombPlantedTime=0;
+}
+
+function bombPlanted(){
+	console.log("!!!")
+	gettick((t)=>{bombPlantedTime=t});
+}
+
+
+function roundFreezeEnd(){
+	gettick((t)=>{freezeEndTime=t});
 }
 
 function fireEvent(e){

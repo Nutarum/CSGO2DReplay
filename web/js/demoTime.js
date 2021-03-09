@@ -1,3 +1,8 @@
+var roundTime = 115200; //default values, get overwrite from demo if posible
+var freezeTime = 15000; //default values, get overwrite from demo if posible
+var freezeEndTime = 0;
+var bombPlantedTime = 0;
+
 var tickInterval = 15.625;
 var speedModifier = 1;
 var roundStarts = [];

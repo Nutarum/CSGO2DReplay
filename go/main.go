@@ -40,6 +40,9 @@ func registerCallbacks() {
 	js.Global().Set("gettick", js.FuncOf(gettick))	
 	
 	js.Global().Set("getgameinfo", js.FuncOf(getgameinfo))	
+	
+	js.Global().Set("getfreezetime", js.FuncOf(getfreezetime))	
+	js.Global().Set("getroundtime", js.FuncOf(getroundtime))	
 }
 
 
@@ -62,7 +65,7 @@ func parseinitInternal(data js.Value, callback js.Value) {
 	
 	returnValue = append(returnValue,header.MapName)
 	returnValue = append(returnValue,parser.TickRate())
-	
+		
 	bInfo, err := json.Marshal(returnValue)
 	checkError(err)
 	callback.Invoke(string(bInfo))
@@ -74,7 +77,14 @@ func registerEvents(){
 	});		
 	parser.RegisterEventHandler(func(events.RoundStart){		
 		js.Global().Call("roundStart")
+	});	
+	parser.RegisterEventHandler(func(events.RoundFreezetimeEnd){		
+		js.Global().Call("roundFreezeEnd")
 	});		
+	parser.RegisterEventHandler(func(events.BombPlanted){		
+		js.Global().Call("bombPlanted")
+	});	
+	
 	parser.RegisterEventHandler(func(e events.SmokeStart){
 		js.Global().Call("smokeStart", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
 	});	
@@ -83,9 +93,19 @@ func registerEvents(){
 	});	
 	parser.RegisterEventHandler(func(e events.FlashExplode){
 		js.Global().Call("flashExplode", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
-	});	
+	});		
+	
 }
 
+func getfreezetime(this js.Value, args []js.Value) interface{} {
+	args[0].Invoke(parser.GameState().ConVars()["mp_freezetime"])
+	return nil
+}
+func getroundtime(this js.Value, args []js.Value) interface{} {
+	args[0].Invoke(parser.GameState().ConVars()["mp_roundtime"])
+	return nil
+}
+	
 func parsetick(this js.Value, args []js.Value) interface{} {
 	parser.ParseNextFrame()
 	return nil
