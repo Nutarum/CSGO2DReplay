@@ -24,7 +24,7 @@ function fireEvent(e){
 
 function smokeStart(e){
 	var [x,y] = transformPositionInferno(e[0],e[1]);	
-	smokes.push([x,y,575, e[2]]);
+	smokes.push([x,y,585, e[2]]);
 }
 
 function heExplode(e){

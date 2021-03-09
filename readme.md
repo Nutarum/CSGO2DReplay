@@ -21,6 +21,6 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 
 ### ToDo
 Round timers
-Positions for other maps (Mirage, Dust, Overpass, Vertigo, Nuke, Train, Cache)
-Try to make returning to a previous tick faster
+Positions for other maps (Mirage, Dust, Overpass, Vertigo, Nuke, Train, Cache)  
+Try to make returning to a previous tick faster  
 Players HUD (player hp, active weapon, money...)

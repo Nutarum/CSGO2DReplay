@@ -208,17 +208,19 @@ function draw(gameJson){
 	});
 	
 	smokes.forEach(smoke => {
-		ctx.beginPath();
-		ctx.globalAlpha = 0.5;
-		ctx.fillStyle="#777777";		
-		ctx.arc(smoke[0], smoke[1], 17, 0, (2 * Math.PI));
-		ctx.fill();			
-		ctx.globalAlpha = 1;
-		
-		ctx.beginPath();
-		ctx.strokeStyle="#ffffff";		
-		ctx.arc(smoke[0], smoke[1], 17, 0, (2 * Math.PI));
-		ctx.stroke();			
+		if(smoke[2]>10){ //los 10 ultimos ticks los dejamos para que no se dibuje la granada tirada en el suelo, aunque en el mapa ya no se este dibujando el efecto del humo
+			ctx.beginPath();
+			ctx.globalAlpha = 0.5;
+			ctx.fillStyle="#777777";		
+			ctx.arc(smoke[0], smoke[1], 20, 0, (2 * Math.PI));
+			ctx.fill();			
+			ctx.globalAlpha = 1;
+			
+			ctx.beginPath();
+			ctx.strokeStyle="#ffffff";		
+			ctx.arc(smoke[0], smoke[1], 20, 0, (2 * Math.PI));
+			ctx.stroke();			
+		}		
 	});
 	
 	heExplosions.forEach(he => {
