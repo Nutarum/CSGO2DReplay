@@ -21,7 +21,6 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 - Example of how to use [demoinfocs-golang](https://github.com/markus-wa/demoinfocs-golang) from javascript at [demoinfocs-wasm](https://github.com/markus-wa/demoinfocs-wasm)
 
 ### ToDo
-- Players HUD (player hp, active weapon, money...)
 - Improve controls, and add shortcuts
 - Make canvas size scalable
 - Implement Z-position for nuke and vertigo

@@ -1,7 +1,7 @@
 function loadCanvas(){
 	var myCanvas = document.getElementById('canvas');
 	
-	myCanvas.width = mapSize;
+	myCanvas.width = mapSize+mapOffsetX+mapOffsetX;
 	myCanvas.height = mapSize;
 	
     ctx = myCanvas.getContext('2d');
@@ -10,14 +10,20 @@ function loadCanvas(){
 	
 	// Make sure the image is loaded first otherwise nothing will draw.
 	background.onload = function(){
-		ctx.drawImage(background,0,0,mapSize,mapSize);   
+		ctx.drawImage(background,mapOffsetX,0,mapSize,mapSize);   
 	}	
 }
 
-function draw(gameJson){
-	ctx.clearRect(0,0,mapSize,mapSize);
+function draw(gameJson){	
+	ctx.clearRect(0,0,mapSize+mapOffsetX+mapOffsetX,mapSize);	
+	
+	ctx.beginPath();
+	ctx.fillStyle = "#000000";
+	ctx.rect(0,0,mapSize+mapOffsetX+mapOffsetX,mapSize);
+	ctx.fill();
+	
 	try{
-		ctx.drawImage(background,0,0,mapSize,mapSize);  
+		ctx.drawImage(background,mapOffsetX,0,mapSize,mapSize);  
 	}catch(e){
 	}
 	 	
@@ -62,24 +68,143 @@ function draw(gameJson){
 				ctx.fill();
 			}
 		});
-	}
+	}	
 	
-	game[0].sort(comparaNombres);
-	game[0].forEach(player => {		
+	var tOffset = 0;
+	var ctOffset = 0;
+	var xOffset = 0;
+	var yOffset = 0;
 	
+	game[0].sort(ordenaPlayers);
+	game[0].forEach(player => {
+		
+		if(player["name"].length>20){
+			player["name"] = player["name"].substring(0, 20);
+		}
+		
+		ctx.font = "bold 12px Arial";
+		ctx.fillStyle = "#dddddd"
+			
 		if(player["team"]==2){
-			var teamColor = "#ffdd00"
+			var teamColor = "#ffdd00"			
+			
+			xOffset = 20;
+			yOffset =  (mapSize/2)-150 + tOffset*90;
+							
+			tOffset++;
 		}else{
 			var teamColor = "#00bbff"
+						
+			xOffset = mapSize + mapOffsetX + 20;
+			yOffset =  (mapSize/2)-150 + ctOffset*90;
+			
+			ctOffset++;			
+		}		
+		
+		ctx.beginPath();
+		ctx.globalAlpha = 0.5;
+		ctx.fillStyle = teamColor;
+		ctx.rect(xOffset, yOffset, 160, 40);			
+		ctx.fill();
+		ctx.globalAlpha =1;
+			
+		ctx.beginPath();
+		ctx.fillStyle = teamColor;
+		ctx.rect(xOffset, yOffset, player["health"]*1.6, 40);
+		ctx.fill();
+			
+		ctx.beginPath();
+		ctx.strokeStyle = "#888888";
+		ctx.lineWidth = 3;
+		ctx.rect(xOffset, yOffset, 160, 40);
+		ctx.stroke();
+		ctx.lineWidth = 1;
+			
+		ctx.textAlign = "center";
+		ctx.fillStyle = "#000000";
+		
+		ctx.fillText(player["name"],xOffset+80, yOffset+17);
+		
+		ctx.fillText(player["k"]+"/"+player["a"]+"/"+player["d"],xOffset+80, yOffset+33);
+		
+		ctx.textAlign = "left";
+		if(player["armor"]>0){
+			if(player["helmet"]){
+				ctx.fillText("H"+player["armor"],xOffset+5, yOffset+33);
+			}else{				
+				ctx.fillText("A"+player["armor"],xOffset+5, yOffset+33);
+			}			
 		}
+		ctx.textAlign = "right";
+		ctx.fillText("$"+player["money"],xOffset+155, yOffset+33);
+		
+		
+		if(player["inv"]){
+			player["inv"].sort();
+			weaps = "";
+			ctx.fillStyle = "#ffffff";
+			
+			if(player["defuse"]){
+				ctx.textAlign = "right";
+				ctx.fillText(weaponList[406],xOffset+155, yOffset+70);
+			}
+			
+			var nNades = 0;
+			player["inv"].forEach(w => {	
+				if(w>10 && w <400){// arma principal
+					ctx.textAlign = "left";
+					ctx.fillText(weaponList[w],xOffset+5, yOffset+55);
+				}else if(w>0 && w<11){ //pistola
+					ctx.textAlign = "left";
+					ctx.fillText(weaponList[w],xOffset+5, yOffset+70);
+				}else if(w==401){//zeus
+					ctx.textAlign = "center";
+					ctx.fillText(weaponList[w],xOffset+80, yOffset+70);
+				}else if(w==404){//bomb
+					ctx.textAlign = "right";
+					ctx.fillText(weaponList[w],xOffset+155, yOffset+70);
+				}else if(w==406){//defuse
+					//parece que el defuse no viene en el inventario, tiene una funcion a parte
+					//ctx.textAlign = "right";
+					//ctx.fillText(weaponList[w],xOffset+155, yOffset+70);
+				}else if(w==501){ //decoy
+					nNades++;
+					ctx.fillStyle = "#f81898";
+					ctx.beginPath();
+					ctx.rect(xOffset+158-nNades*9, yOffset+47, 4, 8);
+					ctx.fill();
+				}else if(w==502 || w == 503){ //molo
+					nNades++;
+					ctx.fillStyle = "#ff0000";
+					ctx.beginPath();
+					ctx.rect(xOffset+158-nNades*9, yOffset+47, 4, 8);
+					ctx.fill();
+				}else if(w==504){ //flash
+					nNades++;
+					ctx.fillStyle = "#ffffff";
+					ctx.beginPath();
+					ctx.rect(xOffset+158-nNades*9, yOffset+47, 4, 8);
+					ctx.fill();
+				}else if(w==505){ //smoke
+					nNades++;
+					ctx.fillStyle = "#8888ff";
+					ctx.beginPath();
+					ctx.rect(xOffset+158-nNades*9, yOffset+47, 4, 8);
+					ctx.fill();
+				}else if(w==506){ //he
+					nNades++;
+					ctx.fillStyle = "#ffa500";
+					ctx.beginPath();
+					ctx.rect(xOffset+158-nNades*9, yOffset+47, 4, 8);
+					ctx.fill();
+				}		
+			});
+		}				
 		
 		var [posX,posY] = transformPosition(player["x"],player["y"]);
 		
-		//var posX = player["x"] / 6.208 + 332
-		//var posY = mapSize-(player["y"] / 6.208 + 176)
-		
 		//if the player is alive
-		if(player["health"]>0){	
+		if(player["health"]>0){
 					
 			// circle at the players position outline
 			ctx.beginPath();
@@ -149,6 +274,7 @@ function draw(gameJson){
 			ctx.fillStyle = "#bbbbbb";
 			ctx.textAlign = "center";
 			ctx.fillText(player["name"], posX, posY-12);
+			ctx.fillText(weaponList[player["activew"]], posX, posY+17);
 		}else{
 			//if the player is dead, draw an X at the position
 			ctx.strokeStyle = teamColor;			
@@ -251,7 +377,7 @@ function draw(gameJson){
 	if(!teamName){
 		teamName = "Terrorists";
 	}
-	ctx.fillText(teamName + " - " + game[3][2], mapSize/2 -5, 20);
+	ctx.fillText(teamName + " - " + game[3][2], (mapSize/2 -5) + mapOffsetX, 20);
 		
 	teamName = game[3][3];
 	if(!teamName){
@@ -259,11 +385,11 @@ function draw(gameJson){
 	}
 	ctx.fillStyle = "#00bbff"
 	ctx.textAlign = "left";
-	ctx.fillText(game[3][4] + " - " + teamName,  mapSize/2 +5, 20);
+	ctx.fillText(game[3][4] + " - " + teamName,  (mapSize/2 +5)+mapOffsetX, 20);
 	
-	ctx.fillStyle = "#ffffff"
+	ctx.fillStyle = "#dddddd"
 	ctx.textAlign = "right";
-	ctx.fillText("round " + (parseInt(game[3][0])+1),  mapSize/2 -5, 40);
+	ctx.fillText("round " + (parseInt(game[3][0])+1),  (mapSize/2 -5)+mapOffsetX, 40);
 
 	//timers	
 	var tick;
@@ -277,7 +403,7 @@ function draw(gameJson){
 		seconds =  parseInt((freezeTime - ((tick - lastRoundStart) * tickInterval))/1000);		
 	}else{
 		if(bombPlantedTime==0){
-			ctx.fillStyle = "#cccccc";
+			ctx.fillStyle = "#dddddd";
 			seconds =  parseInt((roundTime - ((tick - freezeEndTime) * tickInterval))/1000);	
 		}else{
 			ctx.fillStyle = "#ffaaaa";
@@ -292,7 +418,7 @@ function draw(gameJson){
 	}
 	
 	ctx.textAlign = "left";
-	ctx.fillText(mins + ":" + seconds,  mapSize/2 +5, 40);
+	ctx.fillText(mins + ":" + seconds,  (mapSize/2 +5)+mapOffsetX, 40);
 	
 	
 	var txtTime =  ((tick - lastRoundStart) * tickInterval) / 1000;

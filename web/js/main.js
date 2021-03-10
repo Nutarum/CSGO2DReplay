@@ -1,10 +1,12 @@
 var ctx;
 var background = new Image();
 
+var mapOffsetX = 200;
 var mapSize = 800;
 
 window.onload = function() {
 	loadCanvas();	
+	loadWeaponList();
 };
 
 document.addEventListener('DOMContentLoaded', function () {

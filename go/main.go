@@ -199,29 +199,65 @@ func statsFor(p *common.Player) playerStats {
 }
 
 type playerInfo struct {
+	UserID			int	   `json:"userid"`
 	Name    		string `json:"name"`
 	Team    		int    `json:"team"`
 	Health  		int    `json:"health"`
+	Armor  			int    `json:"armor"`
+	Helmet  		bool   `json:"helmet"`
 	X  				int    `json:"x"`
 	Y  				int    `json:"y"`
 	Dir				int    `json:"dir"`
 	Reloading		bool   `json:"rel"`
 	InteractingBomb bool   `json:"bombInt"`
 	Flashed			int    `json:"flash"`
+	Kills			int    `json:"k"`
+	Assists			int    `json:"a"`
+	Deaths			int    `json:"d"`
+	Money			int    `json:"money"`
+	ActiveWeapon	int	   `json:"activew"`
+	Inventory		[]int  `json:"inv"`
+	Defuse			bool   `json:"defuse"`
 }
 
 func infoForPlayer(p *common.Player) playerInfo {
 	return playerInfo{
+		UserID:				p.UserID,
 		Name:				p.Name,
 		Team:  				int(p.Team),
 		Health:				p.Health(),
+		Armor:				p.Armor(),
+		Helmet:				p.HasHelmet(),
 		X: 					int(p.LastAlivePosition.X),
 		Y: 					int(p.LastAlivePosition.Y),
 		Dir: 				int(p.ViewDirectionX()),
 		Reloading: 			p.IsReloading,
 		InteractingBomb: 	p.IsDefusing || p.IsPlanting,
 		Flashed:			int(p.FlashDurationTimeRemaining().Milliseconds()),
+		Kills:				p.Kills(),
+		Assists:			p.Assists(),
+		Deaths:				p.Deaths(),
+		Money:				p.Money(),		
+		ActiveWeapon:		getWeapType(p.ActiveWeapon()),
+		Inventory:			getInventory(p),
+		Defuse:				p.HasDefuseKit(),
 	}
+}
+
+func getWeapType(w *common.Equipment) int{
+	if(w!=nil){
+		return int(w.Type)
+	}else{
+		return 0
+	}
+}
+
+func getInventory(p *common.Player) []int{
+	var ret []int
+	for _, w := range p.Weapons() {
+		ret = append(ret,int(w.Type));
+	}
+	return ret
 }
 
 type nadeInfo struct {

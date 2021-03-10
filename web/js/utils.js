@@ -1,4 +1,5 @@
 var mapname = ""
+var weaponList = []
 
 function testpos(x,y){
 	[nx,ny] = transformPosition(x,y);
@@ -65,12 +66,69 @@ function prepararPosiciones(){
 }
 
 function transformPosition(x,y){			
-	return [(x+initialX)/finalScale,  - ((y-initialY)/finalScale)];		
+	return [(x+initialX)/finalScale + mapOffsetX,  - ((y-initialY)/finalScale)];		
 }
 
-function comparaNombres(a, b) {
-  if (a["name"]<b["name"]) {
+function ordenaPlayers(a, b) {
+  if (a["userid"]<b["userid"]) {
     return -1;
   }
   return 1;
+}
+
+function loadWeaponList(){
+	weaponList[0]="Unknown";
+	// Pistols
+	weaponList[1]="P2000";
+	weaponList[2]="Glock";
+	weaponList[3]="P250";
+	weaponList[4]="Deagle";
+	weaponList[5]="5Seven";
+	weaponList[6]="berettas";
+	weaponList[7]="Tec9";
+	weaponList[8]="CZ";
+	weaponList[9]="USP";
+	weaponList[10]="Revolver";
+	// SMGs
+	weaponList[101]="MP7";
+	weaponList[102]="MP9";
+	weaponList[103]="Bizon";
+	weaponList[104]="Mac10";
+	weaponList[105]="UMP";
+	weaponList[106]="P90";
+	weaponList[107]="MP5";
+	// Heavy
+	weaponList[201]="SawedOff";
+	weaponList[202]="Nova";
+	weaponList[203]="Mag7";
+	weaponList[204]="XM1014";
+	weaponList[205]="M249";
+	weaponList[206]="Negev";
+	// Rifles
+	weaponList[301]="Galil";
+	weaponList[302]="Famas";
+	weaponList[303]="AK47";
+	weaponList[304]="M4A4";
+	weaponList[305]="M4A1";
+	weaponList[306]="Scout";
+	weaponList[307]="SG";
+	weaponList[308]="AUG";
+	weaponList[309]="AWP";
+	weaponList[310]="AutoNoob";
+	weaponList[311]="AutoNoob";
+	// Equipment
+	weaponList[401]="Zeus";
+	weaponList[402]="Kevlar";
+	weaponList[403]="Helmet";
+	weaponList[404]="Bomb";
+	weaponList[405]="Knife";
+	weaponList[406]="Defuse";
+	weaponList[407]="World";
+	// Grenades
+	weaponList[501]="Decoy";
+	weaponList[502]="Molo";
+	weaponList[503]="Molo";
+	weaponList[504]="Flash";
+	weaponList[505]="Smoke";
+	weaponList[506]="HE";
 }
