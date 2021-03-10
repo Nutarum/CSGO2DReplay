@@ -1,5 +1,6 @@
 # CSGO2DReplay
-Tool to replay Counter Strike Global Offensive demos in a 2D web interface.
+Tool to replay Counter Strike Global Offensive demos in a 2D web interface.  
+Currently hosted here: [CSGO2DReplay](https://csgo2dreplay.firebaseapp.com/)
 
 ## Dependencies
 - [Go](https://golang.org/dl/) (Version 1.16 used)
