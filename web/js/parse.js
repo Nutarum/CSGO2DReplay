@@ -13,9 +13,15 @@ function parseFile() {
 		parseinit(bytes, (dataJSON) => {
 			var data = JSON.parse(dataJSON);			
 			console.log(data);
+			mapname = data[0];
 			tickInterval = 1/data[1]*1000;
+			
+			prepararPosiciones();
 						
+			background.src = "./resources/"+mapname+".png";
+			
 			document.getElementById('demofile').style.visibility = "hidden";
+			document.getElementById('btnTestDemo').style.visibility = "hidden";
 			var elems = document.getElementsByClassName('btnControl');
 			for (var i = 0; i < elems.length; i ++) {
 				elems[i].disabled = false;
@@ -29,35 +35,35 @@ function parseFile() {
 
 function processNextTick(){
 	while(nextround){
-		passTime();
+		passTime();			
 		parsetick();
 	}
 	
 	var thisTick;
 	gettick((t)=>{thisTick = t});
 	while(thisTick<targetTick){	
-		parsetick();
+		passTime();	
+		parsetick();		
 		gettick((t)=>{thisTick = t});
 		nextTick = new Date().getTime()+tickInterval * speedModifier;
-		passTime();
 	}
 	
 	if(new Date().getTime()>=nextTick){
-		passTime();	
+		
 		
 		var oldTick 		
 		gettick((t)=>{oldTick = t});
 		
-		parsetick();
+		parsetick();		
 		
-		gettick((t)=>{newTick = t});
-		
-		
+		gettick((t)=>{newTick = t});		
+				
 		while(newTick>oldTick){
-			nextTick += tickInterval / speedModifier;
+			nextTick += tickInterval / speedModifier;				
 			newTick--;
 		}	
 		
+		passTime();		
 		getgameinfo((game) =>{
 			draw(game)			
 		});	

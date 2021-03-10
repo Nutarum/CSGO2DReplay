@@ -19,7 +19,7 @@ function play(){
 	}		
 }
 
-function stop(){
+function pause(){
 	clearInterval(playInterval);
 	playInterval = null;
 }

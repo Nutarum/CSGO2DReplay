@@ -88,6 +88,10 @@ func registerEvents(){
 	parser.RegisterEventHandler(func(e events.SmokeStart){
 		js.Global().Call("smokeStart", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
 	});	
+	parser.RegisterEventHandler(func(e events.SmokeExpired){
+		js.Global().Call("smokeExpired", []interface{}{e.GrenadeEntityID})
+	});	
+	
 	parser.RegisterEventHandler(func(e events.HeExplode){
 		js.Global().Call("heExplode", []interface{}{e.Position.X, e.Position.Y, e.GrenadeEntityID})
 	});	
@@ -141,7 +145,6 @@ func getgameinfoInternal(callback js.Value) {
 	nades := parser.GameState().GrenadeProjectiles()
 	var infoN []nadeInfo
 	for _, nade := range nades {
-		//fmt.Println(nade)
 		infoN = append(infoN, infoForNade(nade))
 	}
 	

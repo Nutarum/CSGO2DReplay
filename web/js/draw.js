@@ -7,6 +7,7 @@ function loadCanvas(){
     ctx = myCanvas.getContext('2d');
 		
 	background.src = "./resources/de_inferno.png";
+	
 	// Make sure the image is loaded first otherwise nothing will draw.
 	background.onload = function(){
 		ctx.drawImage(background,0,0,mapSize,mapSize);   
@@ -15,13 +16,17 @@ function loadCanvas(){
 
 function draw(gameJson){
 	ctx.clearRect(0,0,mapSize,mapSize);
-	ctx.drawImage(background,0,0,mapSize,mapSize);   	
+	try{
+		ctx.drawImage(background,0,0,mapSize,mapSize);  
+	}catch(e){
+	}
+	 	
 		
 	var game = JSON.parse(gameJson);
 	
 	if(game[1]){
 		game[1].forEach(nade => {		
-			var [posX,posY] = transformPositionInferno(nade["x"],nade["y"]);		
+			var [posX,posY] = transformPosition(nade["x"],nade["y"]);		
 
 			drawNade = true;
 			
@@ -35,7 +40,7 @@ function draw(gameJson){
 				ctx.fillStyle = "#8888ff";
 				
 				smokes.forEach(smoke => {
-					if(nade["id"] == smoke[3]){
+					if(nade["id"] == smoke[2]){
 						drawNade=false;
 					}
 				});
@@ -68,7 +73,7 @@ function draw(gameJson){
 			var teamColor = "#00bbff"
 		}
 		
-		var [posX,posY] = transformPositionInferno(player["x"],player["y"]);
+		var [posX,posY] = transformPosition(player["x"],player["y"]);
 		
 		//var posX = player["x"] / 6.208 + 332
 		//var posY = mapSize-(player["y"] / 6.208 + 176)
@@ -164,11 +169,11 @@ function draw(gameJson){
 			ctx.strokeStyle = "#ff0000";			
 			ctx.beginPath();
 			
-			var [x,y] = transformPositionInferno(inferno[0].X,inferno[0].Y);
+			var [x,y] = transformPosition(inferno[0].X,inferno[0].Y);
 			
 			ctx.moveTo(x, y);
 			inferno.forEach(pos => {
-				var [x,y] = transformPositionInferno(pos.X,pos.Y);	
+				var [x,y] = transformPosition(pos.X,pos.Y);	
 				ctx.lineTo(x, y);
 			});
 			ctx.closePath();				
@@ -184,20 +189,18 @@ function draw(gameJson){
 	if(game[4]){
 		var bombX,bombY;
 		if(game[4][2]){
-			[bombX,bombY] = transformPositionInferno(game[4][2],game[4][3]);	
+			[bombX,bombY] = transformPosition(game[4][2],game[4][3]);	
 			bombX+=8;
 			bombY+=8;
 		}else{
-			[bombX,bombY] = transformPositionInferno(game[4][0],game[4][1]);			
+			[bombX,bombY] = transformPosition(game[4][0],game[4][1]);			
 		}			
 		ctx.beginPath();
 		ctx.fillStyle = "#ff0000";	
 		ctx.rect(bombX-3, bombY-3, 6, 6);
 		ctx.fill();	
 	}
-	
-	
-		
+				
 	shots.forEach(shot => {
 		ctx.beginPath();
 		ctx.strokeStyle="#dddddd";		
@@ -207,36 +210,36 @@ function draw(gameJson){
 		ctx.stroke();			
 	});
 	
-	smokes.forEach(smoke => {
-		if(smoke[2]>10){ //los 10 ultimos ticks los dejamos para que no se dibuje la granada tirada en el suelo, aunque en el mapa ya no se este dibujando el efecto del humo
+	smokes.forEach(smoke => {		
 			ctx.beginPath();
 			ctx.globalAlpha = 0.5;
 			ctx.fillStyle="#777777";		
-			ctx.arc(smoke[0], smoke[1], 20, 0, (2 * Math.PI));
+			ctx.arc(smoke[0], smoke[1], 126/finalScale, 0, (2 * Math.PI));
 			ctx.fill();			
 			ctx.globalAlpha = 1;
 			
 			ctx.beginPath();
 			ctx.strokeStyle="#ffffff";		
-			ctx.arc(smoke[0], smoke[1], 20, 0, (2 * Math.PI));
-			ctx.stroke();			
-		}		
+			ctx.arc(smoke[0], smoke[1], 126/finalScale, 0, (2 * Math.PI));
+			ctx.stroke();	
 	});
+	
+	var tim = new Date().getTime();
 	
 	heExplosions.forEach(he => {
-		if(he[2]>190){			
+		if(tim <= he[2]+500){
 			ctx.beginPath();
 			ctx.strokeStyle="#ffa500";		
-			ctx.arc(he[0], he[1], (200-he[2])*2, 0, (2 * Math.PI));
+			ctx.arc(he[0], he[1], (tim - he[2])/20, 0, (2 * Math.PI));
 			ctx.stroke();
-		}			
+		}							
 	});
 	
-	flashExplosions.forEach(flash => {			
+	flashExplosions.forEach(flash => {	
 		ctx.beginPath();
 		ctx.strokeStyle="#ffffff";		
-		ctx.arc(flash[0], flash[1], (10-flash[2])*2, 0, (2 * Math.PI));
-		ctx.stroke();				
+		ctx.arc(flash[0], flash[1], (tim - flash[2])/20, 0, (2 * Math.PI));
+		ctx.stroke();								
 	});
 	
 
@@ -248,7 +251,7 @@ function draw(gameJson){
 	if(!teamName){
 		teamName = "Terrorists";
 	}
-	ctx.fillText(teamName + " - " + game[3][2], 395, 20);
+	ctx.fillText(teamName + " - " + game[3][2], mapSize/2 -5, 20);
 		
 	teamName = game[3][3];
 	if(!teamName){
@@ -256,11 +259,11 @@ function draw(gameJson){
 	}
 	ctx.fillStyle = "#00bbff"
 	ctx.textAlign = "left";
-	ctx.fillText(game[3][4] + " - " + teamName, 405, 20);
+	ctx.fillText(game[3][4] + " - " + teamName,  mapSize/2 +5, 20);
 	
 	ctx.fillStyle = "#ffffff"
 	ctx.textAlign = "right";
-	ctx.fillText("round " + (parseInt(game[3][0])+1), 395, 40);
+	ctx.fillText("round " + (parseInt(game[3][0])+1),  mapSize/2 -5, 40);
 
 	//timers	
 	var tick;
@@ -289,7 +292,7 @@ function draw(gameJson){
 	}
 	
 	ctx.textAlign = "left";
-	ctx.fillText(mins + ":" + seconds, 405, 40);
+	ctx.fillText(mins + ":" + seconds,  mapSize/2 +5, 40);
 	
 	
 	var txtTime =  ((tick - lastRoundStart) * tickInterval) / 1000;

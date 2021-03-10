@@ -17,12 +17,13 @@
 		
 	<body>
 		<input type="file" disabled id="demofile" name="file" onchange="parseFile()" enctype="multipart/form-data"/>	
+		<button id="btnTestDemo" onclick="downloadTest()">downloadTestDemo</button>
 		<div align="center">
 			<canvas id="canvas"></canvas>
 			<br>			
 			<button disabled id="btn2" class="btnControl" onclick="nextRound()">nextRound</button>
 			<button disabled id="btn3" class="btnControl" onclick="play()">play</button>			
-			<button disabled id="btn4" class="btnControl" onclick="stop()">stop</button>			
+			<button disabled id="btn4" class="btnControl" onclick="pause()">pause</button>			
 			<button disabled id="btn5" class="btnControl" onclick="back10()">back10</button>
 			<button disabled id="btn6" class="btnControl" onclick="skip10()">skip10</button>		
 			<button disabled id="btn7" class="btnControl" onclick="x0dot5()">x0.5</button>

@@ -11,43 +11,31 @@ function deleteAllObjects(){
 }
 
 function passTime(){
-	removeShots();
-	removeSmokes();
-	removeHeExplosions();
-	removeFlashExplosions();
+	var t = new Date().getTime();
+	removeShots(t);
+	removeHeExplosions(t);
+	removeFlashExplosions(t);
 }
 
-function removeShots(){
+function removeShots(t){
 	shots.forEach(shot => {
-		shot[3] --;
-		if(shot[3]<=0){
+		if(t > shot[3]+50){
 			shots.splice(shots.indexOf(shot),1)
 		}		
 	});
 }
 
-function removeSmokes(){
-	smokes.forEach(smoke => {
-		smoke[2] --;
-		if(smoke[2]<=0){
-			smokes.splice(smokes.indexOf(smoke),1)
-		}		
-	});
-}
-
-function removeHeExplosions(){
+function removeHeExplosions(t){
 	heExplosions.forEach(he => {
-		he[2] --;
-		if(he[2]<=0){
+		if(t > he[2]+10000){
 			heExplosions.splice(heExplosions.indexOf(he),1)
 		}		
 	});
 }
 
-function removeFlashExplosions(){
-	flashExplosions.forEach(flash => {
-		flash[2] --;
-		if(flash[2]<=0){
+function removeFlashExplosions(t){
+	flashExplosions.forEach(flash => {		
+		if(t > flash[2]+500){
 			flashExplosions.splice(flashExplosions.indexOf(flash),1)
 		}		
 	});

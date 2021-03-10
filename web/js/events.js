@@ -32,7 +32,6 @@ function roundStart(){
 }
 
 function bombPlanted(){
-	console.log("!!!")
 	gettick((t)=>{bombPlantedTime=t});
 }
 
@@ -42,21 +41,33 @@ function roundFreezeEnd(){
 }
 
 function fireEvent(e){
-	var [x,y] = transformPositionInferno(e[0],e[1]);	
-	shots.push([x,y,e[2],2]);
+	var thisTick;
+	gettick((t)=>{thisTick=t})
+	
+	var [x,y] = transformPosition(e[0],e[1]);	
+	shots.push([x,y,e[2],new Date().getTime()]);
 }
 
-function smokeStart(e){
-	var [x,y] = transformPositionInferno(e[0],e[1]);	
-	smokes.push([x,y,585, e[2]]);
+function smokeStart(e){	
+	var [x,y] = transformPosition(e[0],e[1]);
+	smokes.push([x,y,e[2]]);
+}
+function smokeExpired(e){
+	smokes.forEach((s)=>{if(s[2]==e[0]){smokes.splice(smokes.indexOf(s),1)}});	
 }
 
 function heExplode(e){
-	var [x,y] = transformPositionInferno(e[0],e[1]);	
-	heExplosions.push([x,y,200, e[2]]);
+	var thisTick;
+	gettick((t)=>{thisTick=t})
+	
+	var [x,y] = transformPosition(e[0],e[1]);	
+	heExplosions.push([x,y, new Date().getTime(), e[2]]);
 }
 
 function flashExplode(e){
-	var [x,y] = transformPositionInferno(e[0],e[1]);	
-	flashExplosions.push([x,y,10, e[2]]);
+	var thisTick;
+	gettick((t)=>{thisTick=t})
+	
+	var [x,y] = transformPosition(e[0],e[1]);	
+	flashExplosions.push([x,y,new Date().getTime(), e[2]]);
 }
