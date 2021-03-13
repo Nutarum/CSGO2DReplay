@@ -20,6 +20,7 @@
 		<button id="btnTestDemo" onclick="downloadTest()">downloadTestDemo</button>
 		<div align="center">
 			<canvas id="canvas"></canvas>
+			
 			<br>			
 			<button disabled id="btn2" class="btnControl" onclick="nextRound()">nextRound</button>
 			<button disabled id="btn3" class="btnControl" onclick="play()">play</button>			
@@ -32,6 +33,8 @@
 			
 			<br><br>
 			<span id="roundBtns">Round:  </span>
+			<br>
+			<input type="checkbox" id="simpleRadar" name="simpleRadar" value="simpleRadar" onclick='changeRadar(this)'>Simple radar</input>
 			
 		</div>	
 	</body>

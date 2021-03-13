@@ -17,7 +17,7 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 4. Open the web app from your browser -> [index.html](http://localhost/CSGO2DReplay/web/index.html)
 
 ### Other info
-- Map files from [csgo-overviews](https://github.com/zoidbergwill/csgo-overviews)
+- Map files from [csgo-overviews](https://github.com/zoidbergwill/csgo-overviews) and [simpleradar](https://readtldr.gg/simpleradar).
 - Example of how to use [demoinfocs-golang](https://github.com/markus-wa/demoinfocs-golang) from javascript at [demoinfocs-wasm](https://github.com/markus-wa/demoinfocs-wasm)
 
 ### ToDo

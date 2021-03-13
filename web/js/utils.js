@@ -9,6 +9,14 @@ function testpos(x,y){
 	ctx.fill();
 }
 
+function changeRadar(e){
+	if(document.getElementById("simpleRadar").checked){
+		background.src = "./resources/"+mapname+"_simple.png";
+	}else{
+		background.src = "./resources/"+mapname+".png";
+	}
+}
+
 function downloadTest(){	
 	var file_path = "resources/demo.dem";
 	var a = document.createElement('A');
