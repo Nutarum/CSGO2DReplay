@@ -13,28 +13,65 @@
 		<script src="js/events.js"></script>
 		
 		<link rel="stylesheet" type="text/css" href="css/style.css">  
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+
+        
 	</head>
 		
 	<body>
-		<input type="file" disabled id="demofile" name="file" onchange="parseFile()" enctype="multipart/form-data"/>	
-		<button id="btnTestDemo" onclick="downloadTest()">downloadTestDemo</button>
-		<div align="center">
+        
+        <div id="selectDemoDiv">
+
+            <p class="titleSelectDemo1"> CSGO2DReplay </p>
+
+            <p class="titleSelectDemo2"> Choose a .dem file to start the replay! </p>
+            <input type="file" class="form-control" id="demofile" name="file" onchange="parseFile()" enctype="multipart/form-data"/>	
+            <br>
+		    <button id="btnTestDemo" class="btn form-control" onclick="downloadTest()">Download a test .dem file</button>
+        </div>
+
+		
+		<div id="replayDiv" style="visibility:hidden" align="center">
 			<canvas id="canvas"></canvas>
 			
-			<br>			
-			<button disabled id="btn2" class="btnControl" onclick="nextRound()">nextRound</button>
-			<button disabled id="btn3" class="btnControl" onclick="play()">play</button>			
-			<button disabled id="btn4" class="btnControl" onclick="pause()">pause</button>			
-			<button disabled id="btn5" class="btnControl" onclick="back10()">back10</button>
-			<button disabled id="btn6" class="btnControl" onclick="skip10()">skip10</button>		
-			<button disabled id="btn7" class="btnControl" onclick="x0dot5()">x0.5</button>
-			<button disabled id="btn8" class="btnControl" onclick="x2()">x2</button>
-			<button disabled id="btn9" class="btnControl" onclick="x4()">x4</button>
+			<br>	
+            <div class="DemoControlDiv">
+                <button disabled id="btn5" class="btnControl" onclick="back10()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-skip-backward" viewBox="0 0 16 16">
+                        <path d="M.5 3.5A.5.5 0 0 1 1 4v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v2.94l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L8.5 8.752v2.94c0 .653-.713.998-1.233.696L1 8.752V12a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm7 1.133L1.696 8 7.5 11.367V4.633zm7.5 0L9.196 8 15 11.367V4.633z"/>
+                      </svg> 10s
+                </button>
+                <button disabled id="btn4" class="btnControl" onclick="pause()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+                      </svg>
+                </button>	
+                <button disabled id="btn7" class="btnControl" onclick="x0dot5()">x0.5</button>	
+                <button disabled id="btn3" class="btnControl" onclick="play()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                        <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+                    </svg>                      
+                </button>			
+                <button disabled id="btn8" class="btnControl" onclick="x2()">x2</button>
+                <button disabled id="btn9" class="btnControl" onclick="x4()">x4</button>            
+                <button disabled id="btn6" class="btnControl" onclick="skip10()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-skip-forward" viewBox="0 0 16 16">
+                        <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.752l-6.267 3.636c-.52.302-1.233-.043-1.233-.696v-2.94l-6.267 3.636C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696L7.5 7.248v-2.94c0-.653.713-.998 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5zM1 4.633v6.734L6.804 8 1 4.633zm7.5 0v6.734L14.304 8 8.5 4.633z"/>
+                      </svg> 10s
+                </button>	 
+                <button disabled id="btn2" class="btnControl" onclick="nextRound()">nextRound</button>
+                
+                <div class="checkboxRadar">
+                    <input type="checkbox" id="simpleRadar" name="simpleRadar" value="simpleRadar" onclick='changeRadar(this)'></input>       
+                    <label for="simpleRadar" class="light">Simple radar</label>      
+                </div>
+               
+
+            </div>		
 			
-			<br><br>
-			<span id="roundBtns">Round:  </span>
-			<br>
-			<input type="checkbox" id="simpleRadar" name="simpleRadar" value="simpleRadar" onclick='changeRadar(this)'>Simple radar</input>
+			<span id="roundBtns" class="light">Go to round:  </span>
+			<br>	
+
 			
 		</div>	
 	</body>

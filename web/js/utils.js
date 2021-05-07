@@ -68,6 +68,10 @@ function prepararPosiciones(){
 		scale = 3.99;
 		initialX=3170;
 		initialY=1760;	
+	}if(mapname=="de_ancient"){ 
+		scale = 5;
+		initialX=2950;
+		initialY=2150;	
 	}
 	scaleTransform = imageSize/mapSize;
 	finalScale = scale*scaleTransform;

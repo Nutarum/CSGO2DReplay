@@ -22,9 +22,11 @@ To do this, inside the "go" folder in this project, run this command from cmd:
 
 ### ToDo
 - Improve controls, and add shortcuts
+- Add Killfeed
 - Make canvas size scalable
 - Implement Z-position for nuke and vertigo
 - Try to make returning to a previous tick faster
+- Ancient: Update radar to new map version, add simple radar, and adjust scale and initial X and Y positions
 
 ### Minor bugs
 - If game playback speed is paused, HE nades show themself again when HE animation is over.

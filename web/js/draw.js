@@ -5,13 +5,15 @@ function loadCanvas(){
 	myCanvas.height = mapSize;
 	
     ctx = myCanvas.getContext('2d');
-		
+	
+    /*
 	background.src = "./resources/de_inferno.png";
 	
 	// Make sure the image is loaded first otherwise nothing will draw.
-	background.onload = function(){
+    background.onload = function(){
 		ctx.drawImage(background,mapOffsetX,0,mapSize,mapSize);   
 	}	
+    */
 }
 
 function draw(gameJson){	

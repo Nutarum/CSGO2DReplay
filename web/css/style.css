@@ -13,3 +13,52 @@ table, th, td {
 td, th {
     padding: 5px;
 }
+
+#selectDemoDiv{    
+    position: absolute;
+    top:25%;
+    left: 25%;
+    width: 50%;
+    text-align: center;
+}
+
+body {
+    background-color: rgb(26, 21, 37) !important;
+  }
+
+.titleSelectDemo1{
+    font-size: xx-large;
+    font-weight: bold;
+    color: rgb(91, 91, 206);
+}
+.titleSelectDemo2{
+    font-size: x-large;
+    font-weight: bold;
+    color: rgb(91, 91, 206);
+}
+
+.light{
+    font-weight: bold;
+    color: rgb(160, 160, 184);
+}
+
+#roundBtns{
+    display: inline-block;
+    margin-top:5px;
+}
+
+.checkboxRadar{
+    display: inline-block;
+    position: absolute;
+    left: 80%;
+}
+
+#btn5{
+    margin-right: 30px;
+}
+#btn9{
+    margin-right: 30px;
+}
+#btn6{
+    margin-right: 30px;
+}

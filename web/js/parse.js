@@ -20,13 +20,15 @@ function parseFile() {
 						
 			background.src = "./resources/"+mapname+".png";
 			
-			document.getElementById('demofile').style.visibility = "hidden";
-			document.getElementById('btnTestDemo').style.visibility = "hidden";
+            document.getElementById('selectDemoDiv').style.visibility = "hidden";
+
 			var elems = document.getElementsByClassName('btnControl');
 			for (var i = 0; i < elems.length; i ++) {
 				elems[i].disabled = false;
 			}
 			nextRound();			
+            
+            document.getElementById('replayDiv').style.visibility = "visible";
 		});		
 		
 	};
